@@ -26,3 +26,13 @@ helm upgrade --install modaprezzo deploy/helm/modaprezzo -f deploy/helm/modaprez
 Before deploying to OCI, replace the example OCIR registry, Exadata connection service, Kafka-compatible OCI Streaming bootstrap endpoint, ingress class, hostname, and externally managed secret references.
 
 Production secrets should be injected from OCI Vault or the customer-approved secret-management pattern, not committed to Git.
+
+## Chart Validation
+
+Run these checks before opening a deployment change:
+
+```bash
+helm lint deploy/helm/modaprezzo
+helm template modaprezzo deploy/helm/modaprezzo -f deploy/helm/modaprezzo/values-local.yaml
+helm template modaprezzo deploy/helm/modaprezzo -f deploy/helm/modaprezzo/values-oci.yaml
+```
