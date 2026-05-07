@@ -1,0 +1,59 @@
+stages:
+  - validate
+  - build
+  - package
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+.maven_service:
+  image: eclipse-temurin:21
+  cache:
+    key: "$CI_PROJECT_NAME-maven"
+    paths:
+      - .m2/repository
+  before_script:
+    - apt-get update
+    - apt-get install -y maven
+
+validate:terraform:
+  stage: validate
+  image: hashicorp/terraform:1.8
+  script:
+    - cd terraform
+    - terraform fmt -check
+    - terraform init -backend=false
+    - terraform validate
+
+build:services:
+  extends: .maven_service
+  stage: build
+  parallel:
+    matrix:
+      - SERVICE_DIR:
+          - catalog-service
+          - pricing-service
+          - assortment-ui-service
+  script:
+    - cd "$SERVICE_DIR"
+    - mvn -B test
+
+package:service-images:
+  stage: package
+  image: docker:26
+  services:
+    - docker:26-dind
+  parallel:
+    matrix:
+      - SERVICE_DIR:
+          - catalog-service
+          - pricing-service
+          - assortment-ui-service
+  script:
+    - cd "$SERVICE_DIR"
+    - apk add --no-cache maven
+    - mvn -B -DskipTests package
+    - cd ..
+    - docker build -t "$CI_REGISTRY_IMAGE/$SERVICE_DIR:$CI_COMMIT_SHORT_SHA" "$SERVICE_DIR"
+  rules:
+    - if: "$CI_COMMIT_BRANCH"

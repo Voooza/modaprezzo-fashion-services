@@ -1,0 +1,27 @@
+openapi: 3.0.3
+info:
+  title: Assortment UI Service Integration Notes
+  version: 0.1.0
+  description: >
+    The primary interface is a Vaadin UI. This document captures the synchronous
+    REST dependencies used by the UI service.
+servers:
+  - url: http://localhost:8080
+paths:
+  /:
+    get:
+      summary: Vaadin assortment workbench
+      operationId: openAssortmentWorkbench
+      responses:
+        "200":
+          description: Interactive merchandiser UI.
+x-upstream-rest-dependencies:
+  catalog-service:
+    baseUrlVariable: CATALOG_BASE_URL
+    operations:
+      - GET /api/products
+      - GET /api/products/{productId}
+  pricing-service:
+    baseUrlVariable: PRICING_BASE_URL
+    operations:
+      - GET /api/prices/{productId}/{market}

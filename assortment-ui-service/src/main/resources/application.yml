@@ -1,0 +1,27 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+catalog:
+  base-url: ${CATALOG_BASE_URL:http://localhost:8081}
+
+pricing:
+  base-url: ${PRICING_BASE_URL:http://localhost:8082}
+
+vaadin:
+  productionMode: true
+
+spring:
+  application:
+    name: assortment-ui-service
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

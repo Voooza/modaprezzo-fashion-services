@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Pricing Service API
+  version: 0.1.0
+  description: Market price API for fashion product selling workflows.
+servers:
+  - url: http://localhost:8082
+paths:
+  /api/prices:
+    get:
+      summary: List all market prices
+      operationId: listPrices
+      responses:
+        "200":
+          description: Known market prices.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MarketPrice"
+  /api/prices/{productId}/{market}:
+    get:
+      summary: Get a market price
+      operationId: getMarketPrice
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+        - $ref: "#/components/parameters/Market"
+      responses:
+        "200":
+          description: Current price for the product and market.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketPrice"
+        "404":
+          description: Price not found.
+    put:
+      summary: Activate or update a market price
+      operationId: updateMarketPrice
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+        - $ref: "#/components/parameters/Market"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarketPrice"
+      responses:
+        "202":
+          description: Price accepted and price-change event emitted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketPrice"
+components:
+  parameters:
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema:
+        type: string
+    Market:
+      name: market
+      in: path
+      required: true
+      schema:
+        type: string
+        example: DE
+  schemas:
+    MarketPrice:
+      type: object
+      required: [productId, market, currency, amount, status]
+      properties:
+        productId:
+          type: string
+          example: prd-1001
+        market:
+          type: string
+          example: DE
+        currency:
+          type: string
+          example: EUR
+        amount:
+          type: number
+          format: decimal
+          example: 49.99
+        status:
+          type: string
+          enum: [DRAFT, ACTIVE, PROMOTIONAL]

@@ -1,0 +1,40 @@
+asyncapi: 3.0.0
+info:
+  title: Assortment UI Service Events
+  version: 0.1.0
+  description: Events emitted by the Vaadin assortment workbench.
+channels:
+  fashion.assortment.launched.v1:
+    address: fashion.assortment.launched.v1
+    messages:
+      AssortmentLaunched:
+        $ref: "#/components/messages/AssortmentLaunched"
+operations:
+  publishAssortmentLaunched:
+    action: send
+    channel:
+      $ref: "#/channels/fashion.assortment.launched.v1"
+    messages:
+      - $ref: "#/channels/fashion.assortment.launched.v1/messages/AssortmentLaunched"
+components:
+  messages:
+    AssortmentLaunched:
+      name: AssortmentLaunched
+      contentType: application/json
+      payload:
+        type: object
+        required: [eventId, market, collection, productIds, occurredAt]
+        properties:
+          eventId:
+            type: string
+          market:
+            type: string
+          collection:
+            type: string
+          productIds:
+            type: array
+            items:
+              type: string
+          occurredAt:
+            type: string
+            format: date-time

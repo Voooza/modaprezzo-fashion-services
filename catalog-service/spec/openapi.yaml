@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: Catalog Service API
+  version: 0.1.0
+  description: Product and SKU master data API for fashion assortment workflows.
+servers:
+  - url: http://localhost:8081
+paths:
+  /api/products:
+    get:
+      summary: List products
+      operationId: listProducts
+      responses:
+        "200":
+          description: Products available to downstream services.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+  /api/products/{productId}:
+    get:
+      summary: Get a product by id
+      operationId: getProduct
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      responses:
+        "200":
+          description: Product details.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found.
+  /api/products/{productId}/publish:
+    post:
+      summary: Publish a product for selling
+      operationId: publishProduct
+      parameters:
+        - $ref: "#/components/parameters/ProductId"
+      responses:
+        "202":
+          description: Product was published and an event was emitted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "409":
+          description: Product is not ready for selling.
+components:
+  parameters:
+    ProductId:
+      name: productId
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    Product:
+      type: object
+      required: [id, styleNumber, name, collection, color, sizes, status]
+      properties:
+        id:
+          type: string
+          example: prd-1001
+        styleNumber:
+          type: string
+          example: MP-SS26-DR-001
+        name:
+          type: string
+          example: Linen summer dress
+        collection:
+          type: string
+          example: SS26
+        color:
+          type: string
+          example: coral
+        sizes:
+          type: array
+          items:
+            type: string
+          example: ["34", "36", "38", "40"]
+        status:
+          type: string
+          enum: [DRAFT, READY_FOR_SELLING, PUBLISHED]
