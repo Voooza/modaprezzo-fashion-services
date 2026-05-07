@@ -56,9 +56,9 @@ For a free-trial demo, this contract can point to Autonomous Database or another
 
 ## Cost Guardrails
 
-- The default worker shape is `VM.Standard.E4.Flex`, which is a pragmatic amd64 target for enterprise container images.
+- The default worker shape is `VM.Standard.E5.Flex`, which is a pragmatic amd64 target for enterprise container images.
 - To minimize free-trial spend, override `node_shape = "VM.Standard.A1.Flex"` and use arm64 service images.
-- A1 capacity is not guaranteed in every availability domain. If OCI returns `Out of host capacity`, either retry later, use a capacity reservation, or switch to a paid flexible shape such as `VM.Standard.E4.Flex`.
+- A1 capacity is not guaranteed in every availability domain. If OCI returns `Out of host capacity`, either retry later, use a capacity reservation, or switch to a paid flexible shape such as `VM.Standard.E5.Flex`.
 - OKE, load balancers, NAT gateways, Streaming, and database services can consume trial credits depending on region and configuration.
 - Review the OCI cost estimate before `apply`.
 - Use a dedicated compartment and budget alert for this demo.

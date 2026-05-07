@@ -27,6 +27,14 @@ data "oci_containerengine_node_pool_option" "selected" {
   node_pool_os_type     = "OL8"
 }
 
+locals {
+  node_pool_sources = [
+    for source in data.oci_containerengine_node_pool_option.selected.sources : source
+    if !strcontains(source.source_name, "GPU")
+  ]
+  node_pool_source = local.node_pool_sources[0]
+}
+
 resource "oci_containerengine_node_pool" "main" {
   cluster_id         = oci_containerengine_cluster.main.id
   compartment_id     = var.compartment_id
@@ -42,8 +50,8 @@ resource "oci_containerengine_node_pool" "main" {
   }
 
   node_source_details {
-    image_id    = data.oci_containerengine_node_pool_option.selected.sources[0].image_id
-    source_type = data.oci_containerengine_node_pool_option.selected.sources[0].source_type
+    image_id    = local.node_pool_source.image_id
+    source_type = local.node_pool_source.source_type
   }
 
   node_config_details {

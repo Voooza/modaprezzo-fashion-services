@@ -39,9 +39,9 @@ variable "kubernetes_version" {
 }
 
 variable "node_shape" {
-  description = "OKE worker node shape. VM.Standard.E4.Flex matches common amd64 enterprise images; VM.Standard.A1.Flex can be used for cost-conscious arm64 demos."
+  description = "OKE worker node shape. VM.Standard.E5.Flex matches common amd64 enterprise images; VM.Standard.A1.Flex can be used for cost-conscious arm64 demos."
   type        = string
-  default     = "VM.Standard.E4.Flex"
+  default     = "VM.Standard.E5.Flex"
 }
 
 variable "node_count" {
