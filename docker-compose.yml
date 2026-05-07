@@ -1,4 +1,17 @@
 services:
+  oracle-db:
+    build: ./local/oracle
+    image: modaprezzo-oracle-free:local
+    environment:
+      ORACLE_PASSWORD: modaprezzo_sys_dev_password
+    ports:
+      - "1521:1521"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
   kafka:
     image: apache/kafka:3.7.1
     environment:
@@ -22,23 +35,36 @@ services:
     build: ./catalog-service
     environment:
       SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/FREEPDB1
+      SPRING_DATASOURCE_USERNAME: catalog_app
+      SPRING_DATASOURCE_PASSWORD: catalog_app_dev_password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8081:8081"
     depends_on:
-      - kafka
+      kafka:
+        condition: service_started
+      oracle-db:
+        condition: service_healthy
 
   pricing-service:
     build: ./pricing-service
     environment:
       SERVER_PORT: 8082
       CATALOG_BASE_URL: http://catalog-service:8081
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/FREEPDB1
+      SPRING_DATASOURCE_USERNAME: pricing_app
+      SPRING_DATASOURCE_PASSWORD: pricing_app_dev_password
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     ports:
       - "8082:8082"
     depends_on:
-      - kafka
-      - catalog-service
+      kafka:
+        condition: service_started
+      oracle-db:
+        condition: service_healthy
+      catalog-service:
+        condition: service_started
 
   assortment-ui-service:
     build: ./assortment-ui-service
@@ -50,5 +76,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - catalog-service
-      - pricing-service
+      catalog-service:
+        condition: service_started
+      pricing-service:
+        condition: service_started

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: modaprezzo
+description: Fashion commerce microservice demonstrator for Kubernetes and OKE
+type: application
+version: 0.1.0
+appVersion: 0.1.0-SNAPSHOT

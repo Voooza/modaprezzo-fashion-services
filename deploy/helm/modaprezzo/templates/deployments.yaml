@@ -1,0 +1,66 @@
+{{- range $serviceName, $service := .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "modaprezzo.fullname" $ }}-{{ $serviceName }}
+  labels:
+    {{- include "modaprezzo.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $serviceName }}
+spec:
+  replicas: {{ $service.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ $.Release.Name }}
+      app.kubernetes.io/component: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        {{- include "modaprezzo.labels" $ | nindent 8 }}
+        app.kubernetes.io/component: {{ $serviceName }}
+    spec:
+      containers:
+        - name: {{ $serviceName }}
+          image: "{{ $.Values.image.registry }}/{{ $service.image }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ $service.port }}
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ $.Values.kafka.bootstrapServers | quote }}
+            {{- if $service.databaseUser }}
+            - name: SPRING_DATASOURCE_URL
+              value: {{ $.Values.database.url | quote }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ $service.databaseUser | quote }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.database.secretName }}
+                  key: {{ $service.databasePasswordKey }}
+            {{- end }}
+            {{- range $name, $value := $service.env }}
+            - name: {{ $name }}
+              value: {{ $value | quote }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 768Mi
+---
+{{- end }}

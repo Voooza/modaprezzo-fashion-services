@@ -10,6 +10,7 @@ The current files are placeholders and design notes, not production-ready module
 - OKE workload namespace and service-account setup.
 - Container image repository references.
 - Kafka-compatible messaging, mapped either to customer platform Kafka or OCI Streaming with a compatibility layer.
+- Oracle Database connectivity through Exadata Database Service, with application schemas owned by individual services.
 - Kubernetes deployment, service, ingress, and horizontal pod autoscaler resources.
 - Secrets integration through the approved customer secret store.
 - Observability annotations for Prometheus, Grafana dashboards, OpenSearch logs, and Jaeger tracing.
@@ -28,5 +29,6 @@ The current files are placeholders and design notes, not production-ready module
 - OKE cluster ownership and namespace provisioning process.
 - Container registry naming and vulnerability-scanning requirements.
 - Approved event platform: Kafka, OCI Streaming, or another managed broker.
+- Exadata service name, wallet/TLS requirements, schema provisioning process, and backup/restore expectations.
 - Ingress, service mesh, TLS, WAF, and network-policy standards.
 - Secrets management and key management requirements.

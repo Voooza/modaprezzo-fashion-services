@@ -6,6 +6,7 @@ This directory contains a lightweight technical demonstrator for a fashion-selli
 - Vaadin UI for product and assortment workflows
 - REST APIs for synchronous service integration
 - Kafka-compatible async messaging for product, price, and assortment events
+- Oracle JDBC persistence with Flyway migrations for the stateful services
 - Docker and Kubernetes-ready service boundaries
 - Terraform notes for OCI/Kubernetes deployment
 
@@ -26,7 +27,9 @@ dev/
   catalog-service/
   pricing-service/
   assortment-ui-service/
+  deploy/
   terraform/
+  local/
   docker-compose.yml
 ```
 
@@ -48,6 +51,29 @@ cd ../pricing-service && mvn -gs ../maven-settings.xml -s ../maven-settings.xml 
 cd ../assortment-ui-service && mvn -gs ../maven-settings.xml -s ../maven-settings.xml package
 ```
 
+## Local Runtime
+
+`docker-compose.yml` starts the closest practical workstation runtime:
+
+- Oracle Database Free with separate `catalog_app` and `pricing_app` schemas.
+- Apache Kafka as the local stand-in for OCI Streaming's Kafka-compatible endpoint.
+- The three Spring Boot service containers.
+
+The database passwords in this repository are local-only demo credentials. Real OCI deployments should use OCI Vault or the customer-approved secret-management pattern.
+
+```bash
+podman compose up --build -d
+```
+
+## Kubernetes And OCI Shape
+
+The Helm chart in `deploy/helm/modaprezzo` is the shared deployment contract for local Kubernetes and OCI Kubernetes Engine.
+
+- `values-local.yaml` points to local Oracle/Kafka endpoints.
+- `values-oci.yaml` contains placeholders for OCIR images, Exadata connection service, OCI Streaming Kafka endpoint, ingress, and externally managed secrets.
+
+In OCI, the services run on OKE and connect to Oracle Database on Exadata through JDBC. The application containers do not run on Exadata; Exadata provides the managed Oracle Database runtime.
+
 ## Integration Flow
 
 1. A product manager publishes a product in `catalog-service`.
@@ -58,7 +84,6 @@ cd ../assortment-ui-service && mvn -gs ../maven-settings.xml -s ../maven-setting
 
 ## Suggested Next Steps
 
-- Replace the in-memory adapters with Oracle/PostgreSQL persistence.
 - Add Testcontainers-based integration tests for Kafka and REST contracts.
 - Add GitLab CI jobs for build, test, container scan, and deployment manifest validation.
 - Map Terraform modules to the customer-provided OCI tenancy, OKE cluster, registry, networking, and observability standards.

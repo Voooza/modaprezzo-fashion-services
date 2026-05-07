@@ -1,0 +1,19 @@
+image:
+  registry: localhost:5000/modaprezzo
+  tag: local
+  pullPolicy: IfNotPresent
+
+database:
+  url: jdbc:oracle:thin:@oracle-db.default.svc.cluster.local:1521/FREEPDB1
+  createSecret: true
+  secretName: modaprezzo-db
+  catalogPassword: catalog_app_dev_password
+  pricingPassword: pricing_app_dev_password
+
+kafka:
+  bootstrapServers: kafka.default.svc.cluster.local:9092
+
+ingress:
+  enabled: true
+  className: nginx
+  host: modaprezzo.local

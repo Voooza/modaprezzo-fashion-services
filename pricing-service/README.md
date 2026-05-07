@@ -1,6 +1,6 @@
 # Pricing Service
 
-Owns market prices, promotion eligibility, and simple margin guardrails for fashion products.
+Owns market prices, promotion eligibility, and simple margin guardrails for fashion products. Market prices are persisted in the service-owned Oracle schema and migrated with Flyway.
 
 ## Interfaces
 

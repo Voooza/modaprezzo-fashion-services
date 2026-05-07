@@ -3,3 +3,6 @@
 .m2/
 **/src/main/frontend/generated/
 **/src/main/frontend/index.html
+.terraform/
+*.tfstate
+*.tfstate.*

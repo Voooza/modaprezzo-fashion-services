@@ -18,6 +18,7 @@ For this demonstrator, Terraform represents the deployment contract around the t
 - `platform-foundation`: compartments, policies, network references, and shared provider configuration.
 - `workload-namespace`: Kubernetes namespace, service accounts, quotas, network policies, and mesh annotations.
 - `eventing`: topic/stream declarations for product, price, and assortment events.
+- `data-services`: Exadata database references, service schemas, wallet or connect-string configuration, and approved secret references.
 - `service-deployment`: deployment, service, ingress, config maps, autoscaling, and observability labels per microservice.
 
 ## Why This Matters For The RFP

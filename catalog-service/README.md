@@ -1,6 +1,6 @@
 # Catalog Service
 
-Owns fashion product master data for sellable items: style, color, size range, collection, market readiness, and publication status.
+Owns fashion product master data for sellable items: style, color, size range, collection, market readiness, and publication status. Product state is persisted in the service-owned Oracle schema and migrated with Flyway.
 
 ## Interfaces
 

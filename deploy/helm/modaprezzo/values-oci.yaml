@@ -1,0 +1,17 @@
+image:
+  registry: replace-with-region.ocir.io/replace-with-tenancy-namespace/modaprezzo
+  tag: 0.1.0-SNAPSHOT
+  pullPolicy: IfNotPresent
+
+database:
+  url: jdbc:oracle:thin:@replace-with-exadata-service-name_high?TNS_ADMIN=/etc/oracle/wallet
+  createSecret: false
+  secretName: modaprezzo-db
+
+kafka:
+  bootstrapServers: replace-with-oci-streaming-kafka-bootstrap:9092
+
+ingress:
+  enabled: true
+  className: native-ic-ingress-class
+  host: replace-with-approved-hostname.example.com
