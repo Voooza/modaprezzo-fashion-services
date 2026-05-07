@@ -28,6 +28,17 @@ spec:
           env:
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: {{ $.Values.kafka.bootstrapServers | quote }}
+            {{- if $.Values.kafka.auth.enabled }}
+            - name: SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL
+              value: "SASL_SSL"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_MECHANISM
+              value: "PLAIN"
+            - name: SPRING_KAFKA_PROPERTIES_SASL_JAAS_CONFIG
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.kafka.auth.secretName }}
+                  key: {{ $.Values.kafka.auth.jaasConfigKey }}
+            {{- end }}
             {{- if $service.databaseUser }}
             - name: SPRING_DATASOURCE_URL
               value: {{ $.Values.database.url | quote }}
@@ -43,6 +54,12 @@ spec:
             - name: {{ $name }}
               value: {{ $value | quote }}
             {{- end }}
+          {{- if and $service.databaseUser $.Values.database.walletSecretName }}
+          volumeMounts:
+            - name: oracle-wallet
+              mountPath: {{ $.Values.database.walletMountPath }}
+              readOnly: true
+          {{- end }}
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
@@ -62,5 +79,11 @@ spec:
             limits:
               cpu: 1000m
               memory: 768Mi
+      {{- if and $service.databaseUser $.Values.database.walletSecretName }}
+      volumes:
+        - name: oracle-wallet
+          secret:
+            secretName: {{ $.Values.database.walletSecretName }}
+      {{- end }}
 ---
 {{- end }}

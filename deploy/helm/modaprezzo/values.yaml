@@ -10,11 +10,17 @@ database:
   url: jdbc:oracle:thin:@oracle-db:1521/FREEPDB1
   createSecret: true
   secretName: modaprezzo-db
+  walletSecretName: ""
+  walletMountPath: /etc/oracle/wallet
   catalogPassword: catalog_app_dev_password
   pricingPassword: pricing_app_dev_password
 
 kafka:
   bootstrapServers: kafka:9092
+  auth:
+    enabled: false
+    secretName: modaprezzo-kafka
+    jaasConfigKey: sasl-jaas-config
 
 ingress:
   enabled: false

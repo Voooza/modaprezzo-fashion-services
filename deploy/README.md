@@ -27,6 +27,8 @@ Before deploying to OCI, replace the example OCIR registry, Exadata connection s
 
 Production secrets should be injected from OCI Vault or the customer-approved secret-management pattern, not committed to Git.
 
+For the full managed OCI flow, see `deploy/oci-runbook.md` and `terraform/oci-target`.
+
 ## Chart Validation
 
 Run these checks before opening a deployment change:

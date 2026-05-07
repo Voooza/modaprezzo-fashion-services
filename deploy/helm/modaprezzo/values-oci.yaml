@@ -7,9 +7,15 @@ database:
   url: jdbc:oracle:thin:@replace-with-exadata-service-name_high?TNS_ADMIN=/etc/oracle/wallet
   createSecret: false
   secretName: modaprezzo-db
+  walletSecretName: modaprezzo-db-wallet
+  walletMountPath: /etc/oracle/wallet
 
 kafka:
   bootstrapServers: replace-with-oci-streaming-kafka-bootstrap:9092
+  auth:
+    enabled: true
+    secretName: modaprezzo-kafka
+    jaasConfigKey: sasl-jaas-config
 
 ingress:
   enabled: true
