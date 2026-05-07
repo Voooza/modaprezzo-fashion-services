@@ -35,7 +35,7 @@ variable "environment" {
 variable "kubernetes_version" {
   description = "OKE Kubernetes version. Use an active version available in the selected region."
   type        = string
-  default     = "v1.31.1"
+  default     = "v1.34.2"
 }
 
 variable "node_shape" {

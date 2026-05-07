@@ -19,6 +19,14 @@ resource "oci_containerengine_cluster" "main" {
   }
 }
 
+data "oci_containerengine_node_pool_option" "selected" {
+  compartment_id        = var.compartment_id
+  node_pool_option_id   = oci_containerengine_cluster.main.id
+  node_pool_k8s_version = var.kubernetes_version
+  node_pool_os_arch     = local.node_pool_os_arch
+  node_pool_os_type     = "OL8"
+}
+
 resource "oci_containerengine_node_pool" "main" {
   cluster_id         = oci_containerengine_cluster.main.id
   compartment_id     = var.compartment_id
@@ -31,6 +39,11 @@ resource "oci_containerengine_node_pool" "main" {
   node_shape_config {
     ocpus         = var.node_ocpus
     memory_in_gbs = var.node_memory_gbs
+  }
+
+  node_source_details {
+    image_id    = data.oci_containerengine_node_pool_option.selected.sources[0].image_id
+    source_type = data.oci_containerengine_node_pool_option.selected.sources[0].source_type
   }
 
   node_config_details {

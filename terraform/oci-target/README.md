@@ -12,6 +12,8 @@ This Terraform stack models the target OCI shape for the ModaPrezzo demonstrator
 
 The application containers run on OKE. Oracle Database runs as a managed database service and is accessed through JDBC from the services.
 
+The OKE worker image is resolved from OCI node-pool options for the selected Kubernetes version, OS family, and CPU architecture. This keeps the stack from pinning a region-specific image OCID in source control.
+
 ## Why Database Is A Contract Here
 
 Exadata Database Service is normally provisioned through a customer platform or database team and carries cost, capacity, network, backup, security, and operational decisions beyond this small demo stack. The correct target pattern is to keep the database lifecycle separate and provide the application team with:
@@ -56,6 +58,7 @@ For a free-trial demo, this contract can point to Autonomous Database or another
 
 - The default worker shape is `VM.Standard.E4.Flex`, which is a pragmatic amd64 target for enterprise container images.
 - To minimize free-trial spend, override `node_shape = "VM.Standard.A1.Flex"` and use arm64 service images.
+- A1 capacity is not guaranteed in every availability domain. If OCI returns `Out of host capacity`, either retry later, use a capacity reservation, or switch to a paid flexible shape such as `VM.Standard.E4.Flex`.
 - OKE, load balancers, NAT gateways, Streaming, and database services can consume trial credits depending on region and configuration.
 - Review the OCI cost estimate before `apply`.
 - Use a dedicated compartment and budget alert for this demo.
