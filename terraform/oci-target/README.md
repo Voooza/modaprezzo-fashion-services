@@ -37,7 +37,7 @@ For a free-trial demo, this contract can point to Autonomous Database or another
    oci_auth       = "SecurityToken"
    ```
 
-   Use `SecurityToken` after `oci session authenticate`. Use `ApiKey` when the OCI config profile uses an uploaded API signing key.
+   Use `SecurityToken` after `oci session authenticate`. Use `ApiKey` when the OCI Terraform provider uses an uploaded API signing key.
 
 3. Initialize and plan:
 

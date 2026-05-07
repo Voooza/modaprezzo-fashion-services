@@ -105,6 +105,33 @@ resource "oci_core_security_list" "public" {
       }
     }
   }
+
+  ingress_security_rules {
+    protocol = "6"
+    source   = oci_core_vcn.main.cidr_blocks[0]
+    tcp_options {
+      min = 6443
+      max = 6443
+    }
+  }
+
+  ingress_security_rules {
+    protocol = "6"
+    source   = oci_core_vcn.main.cidr_blocks[0]
+    tcp_options {
+      min = 12250
+      max = 12250
+    }
+  }
+
+  ingress_security_rules {
+    protocol = "1"
+    source   = oci_core_vcn.main.cidr_blocks[0]
+    icmp_options {
+      type = 3
+      code = 4
+    }
+  }
 }
 
 resource "oci_core_security_list" "private" {
