@@ -27,7 +27,10 @@ Minimum `terraform.tfvars`:
 ```hcl
 region         = "eu-frankfurt-1"
 compartment_id = "ocid1.compartment.oc1..replace"
+oci_auth       = "SecurityToken"
 ```
+
+Use `oci_auth = "SecurityToken"` after `oci session authenticate`. Use `oci_auth = "ApiKey"` when the OCI config profile uses an uploaded API signing key.
 
 For a free-trial-friendly worker pool, use ARM nodes and build ARM images:
 

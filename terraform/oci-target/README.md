@@ -32,7 +32,10 @@ For a free-trial demo, this contract can point to Autonomous Database or another
    ```hcl
    region         = "eu-frankfurt-1"
    compartment_id = "ocid1.compartment.oc1..replace"
+   oci_auth       = "SecurityToken"
    ```
+
+   Use `SecurityToken` after `oci session authenticate`. Use `ApiKey` when the OCI config profile uses an uploaded API signing key.
 
 3. Initialize and plan:
 

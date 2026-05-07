@@ -3,6 +3,18 @@ variable "region" {
   type        = string
 }
 
+variable "oci_auth" {
+  description = "OCI Terraform provider auth mode. Use SecurityToken after running oci session authenticate, or ApiKey for long-lived API key auth."
+  type        = string
+  default     = "SecurityToken"
+}
+
+variable "oci_config_profile" {
+  description = "OCI CLI config profile used by the Terraform provider."
+  type        = string
+  default     = "DEFAULT"
+}
+
 variable "compartment_id" {
   description = "Compartment OCID where the demo platform resources are provisioned."
   type        = string
