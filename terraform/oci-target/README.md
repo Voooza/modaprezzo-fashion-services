@@ -28,7 +28,7 @@ For a free-trial demo, this contract can point to Autonomous Database or another
 
 ## Apply Flow
 
-1. Configure OCI CLI credentials or run this from OCI Cloud Shell.
+1. Install Terraform 1.12.0 or newer, then configure OCI CLI credentials or run this from OCI Cloud Shell.
 2. Create `terraform.tfvars` with at least:
 
    ```hcl
@@ -39,12 +39,23 @@ For a free-trial demo, this contract can point to Autonomous Database or another
 
    Use `SecurityToken` after `oci session authenticate`. Use `ApiKey` when the OCI Terraform provider uses an uploaded API signing key.
 
-3. Initialize and plan:
+3. Initialize Terraform:
 
    ```bash
    terraform init
    terraform plan
    ```
+
+   The existing local state for this checkout has already been migrated. If you are moving an older local-state copy of this stack yourself, use `terraform init -migrate-state` once.
+
+The Terraform state backend is OCI Object Storage:
+
+- Bucket: `modaprezzo-dev-terraform-state`
+- Namespace: `frtcaobwa51v`
+- Object key: `oci-target/terraform.tfstate`
+- Region: `eu-frankfurt-1`
+
+The bucket must stay private and versioning should remain enabled so previous state versions can be recovered.
 
 4. Apply after reviewing cost and quota impact:
 
